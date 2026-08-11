@@ -138,19 +138,24 @@ client.initialize();
 
 # 📁 Struktur Project
 
-Struktur utama project kurang lebih terdiri dari:
+Struktur utama project terdiri dari:
 
 ```text
-wabot-Project/
+node_modules/wabot-project/
+├── app.example.js
 ├── index.js
 ├── package.json
 ├── README.md
-├── .gitignore
-├── .npmignore
+└── scripts/
+    ├── postinstall.js
 └── src/
     ├── console/
     ├── structures/
-    └── util/
+    ├── util/
+    └── klien.js
+app.js
+package-lock.json
+package.json
 ```
 
 ### `index.js`
@@ -165,17 +170,15 @@ Berisi struktur/class yang digunakan oleh Wabot Project, termasuk pengelolaan pe
 
 Berisi fungsi utilitas dan konfigurasi yang digunakan oleh project.
 
+### `app.js`
+
+Berisi contoh program sederhana.
+
 ---
 
 # ⚙️ Dependency
 
 Project ini menggunakan beberapa library Node.js untuk menjalankan fungsinya:
-
-* **Puppeteer** — digunakan untuk menjalankan dan mengendalikan browser.
-* **node-fetch** — digunakan untuk kebutuhan pengambilan data melalui HTTP.
-* **mime** — digunakan untuk membantu mengenali MIME type file.
-* **fluent-ffmpeg** — digunakan sebagai bagian dari utilitas media yang tersedia pada source project.
-
 Dependency akan di-install otomatis ketika project dipasang melalui NPM.
 
 ---
