@@ -1,6 +1,6 @@
-const { Client } = require("wabot-project");
-const nomorWA = '628xxxxxxxxx'; //ganti dengan nomor bot whatsapp milikmu
-let pairingCodeRequested = false;
+const { Client, PesanMedia } = require("wabot-project");
+const nomorWAbot = '628xxxxxxxxx'; //edit dahulu
+const nomorWAtujuan = '628xxxxxxxxx'; //edit dahulu
 
 const client = new Client({
     puppeteer: {
@@ -9,14 +9,9 @@ const client = new Client({
 });
 
 client.on('lakukan_pairing', async () => {
-    const pairingCodeEnabled = true;
-    if (pairingCodeEnabled && !pairingCodeRequested) {
-        const pairingCode = await client.pairingDenganNomor(nomorWA); // enter the target phone number
-        console.log(`Nomor : ${nomorWA}\nSilahkan Lakukan Pairing, code: ${pairingCode}`);
-        pairingCodeRequested = true;
-    }
+    const pairingCode = await client.pairingDenganNomor(nomorWA); // enter the target phone number
+    console.log(`Nomor : ${nomorWA}\nSilahkan Lakukan Pairing, code: ${pairingCode}`);
 });
-
 
 client.on('loading_screen', (percent, message) => {
     console.log('[LOADING]', percent, "%");
@@ -31,12 +26,19 @@ client.on('siap', async () => {
     LID : +${info.wid.user}
     DEVICE : ${(info.platform).toUpperCase()}`);
 
-    await client.kirimPesan('628xxxx', "Ready"); //ganti 628xxxx dengan nomor tujuan untuk mengirim pesan bahwa bot sudah Ready
+    await client.kirimPesan(`${nomorWAtujuan}@c.us`, "Ready");
 });
 
 client.on('pesan_masuk', async (message) => {
     try {
-        console.log(message);
+        const isipesan = message.body;
+        if (isipesan === '/kirimpesan') {
+            await client.kirimPesan(nomorWAtujuan, "Haii Saya Bot Whatsapp by Ammar!!");
+        } else if (isipesan === '/kirimgambar') {
+            // const gambar = await PesanMedia.fromFilePath('gambar.jpg');
+            const gambar = await PesanMedia.fromUrl('https://upload.wikimedia.org/wikipedia/commons/3/3f/JPEG_example_flower.jpg');
+            await client.kirimPesan(nomorWAtujuan, gambar);
+        }
     } catch (e) {
         console.log('Error 101 :', e.message);
     }
