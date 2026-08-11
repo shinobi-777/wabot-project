@@ -1,7 +1,8 @@
 'use strict';
 
 const EventEmitter = require('events');
-const puppeteer = require('puppeteer');
+// const puppeteer = require('puppeteer');
+let puppeteer = null;
 const { WhatsWebURL, DefaultOptions, logInfo, logError, exposeFunctionIfAbsent, Util } = require('./util');
 const { ConsoleWindowF12 } = require('./console/window');
 const { PesanMedia } = require('./structures');
@@ -34,6 +35,11 @@ class Client extends EventEmitter {
     }
 
     async initialize() {
+
+        if (!puppeteer) {
+            const puppeteerModule = await import('puppeteer');
+            puppeteer = puppeteerModule.default || puppeteerModule;
+        }
 
         let browser, page;
 
@@ -158,7 +164,7 @@ class Client extends EventEmitter {
 
         await this.pupPage.evaluate(ConsoleWindowF12);
         await this.cekModulWindowWAWEB();
-        
+
         const perluOtentikasi = await this.pupPage.evaluate(async () => {
             let status = konsol.statusLogin.state; //kalau sudah login "CONNECTED"
 
@@ -474,7 +480,7 @@ class Client extends EventEmitter {
                                 forceMediaHd: options.sendMediaAsHd,
                             });
                     mediaOptions.caption = options.caption;
-                    content = options.sendMediaAsSticker
+                    isipesan = options.sendMediaAsSticker
                         ? undefined
                         : mediaOptions.preview;
                     mediaOptions.isViewOnce = options.isViewOnce;
