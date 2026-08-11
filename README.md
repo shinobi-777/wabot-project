@@ -61,9 +61,10 @@ index.js
 Pairing hanya menggunakan pairingCode bukan barcode!!
 ```
 
-Package dapat di-import menggunakan:
+Setelah berhasil di Install lalu buat file js baru pada project kamu:
 
 ```js
+dengan import 
 const { Client, PesanMedia } = require("wabot-project");
 ```
 
