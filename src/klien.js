@@ -1,7 +1,6 @@
 'use strict';
 
 const EventEmitter = require('events');
-// const puppeteer = require('puppeteer');
 let puppeteer = null;
 const { WhatsWebURL, DefaultOptions, logInfo, logError, exposeFunctionIfAbsent, Util } = require('./util');
 const { ConsoleWindowF12 } = require('./console/window');
@@ -56,9 +55,7 @@ class Client extends EventEmitter {
             const browserArgs = [...(puppeteerOpts.args || [])];
             if (!browserArgs.find(arg => arg.includes('--user-agent'))) {
                 browserArgs.push(`--user-agent=${this.options.userAgent}`);
-                // logInfo(`--user-agent=${this.options.userAgent}`);
             }
-            // navigator.webdriver fix
             browserArgs.push('--disable-blink-features=AutomationControlled');
 
             browser = await puppeteer.launch({ ...puppeteerOpts, args: browserArgs });
@@ -75,7 +72,6 @@ class Client extends EventEmitter {
             return { width: window.screen.availWidth, height: window.screen.availHeight };
         });
 
-        // Terapkan ukuran layar ke viewport
         await page.setViewport({ width, height });
 
         this.pupBrowser = browser;
@@ -88,13 +84,6 @@ class Client extends EventEmitter {
         });
 
         await this.cekStatusLogin();
-
-        // this.pupPage.on('framenavigated', async (frame) => {
-        //     if (frame.url().includes('post_logout=1') || this.lastLoggedOut) {
-        //         this.lastLoggedOut = false;
-        //     }
-        //     await this.cekStatusLogin();
-        // });
     }
 
     async cekModulWindowWAWEB() {
@@ -169,7 +158,6 @@ class Client extends EventEmitter {
             let status = konsol.statusLogin.state; //kalau sudah login "CONNECTED"
 
             if (status === 'OPENING' || status === 'UNLAUNCHED' || status === 'PAIRING') {
-                // wait till status changes
                 await new Promise(r => {
                     konsol.statusLogin.on('change:state', function waitTillInit(_AppState, state) {
                         if (state !== 'OPENING' && state !== 'UNLAUNCHED' && state !== 'PAIRING') {
@@ -199,7 +187,6 @@ class Client extends EventEmitter {
                                 'change:state',
                                 listener
                             );
-
                             resolve();
                         }
                     };
@@ -239,7 +226,7 @@ class Client extends EventEmitter {
             async (percent) => {
                 if (lastPercent !== percent) {
                     lastPercent = percent;
-                    this.emit('loading_screen', percent, 'WhatsApp'); // Message is hardcoded as "WhatsApp" for now
+                    this.emit('loading_screen', percent, 'WhatsApp');
 
                     if (percent >= 99) {
                         loadingResolve();
@@ -347,7 +334,6 @@ class Client extends EventEmitter {
             msg.author = pesan_baru.author;
             msg.isForwarded = pesan_baru.isForwarded;
 
-
             if (pesan_baru.type !== 'chat') {
                 msg.caption = pesan_baru.caption;
                 msg.deprecatedMms3Url = pesan_baru.deprecatedMms3Url;
@@ -361,7 +347,6 @@ class Client extends EventEmitter {
                 msg.mediaKeyTimestamp = pesan_baru.mediaKeyTimestamp;
                 msg.pageCount = pesan_baru.pageCount;
             }
-
             this.emit('pesan_masuk', msg);
         });
 
@@ -387,7 +372,6 @@ class Client extends EventEmitter {
                     }
 
                     delete msg.pendingAckUpdate;
-                    // console.log('ada pesan baru masuk', Object.assign({},msg));
                     window.event_pesan(msg);
                 }
             });
@@ -416,17 +400,6 @@ class Client extends EventEmitter {
         const result = await this.pupPage.evaluate(async (pesandari, isipesan, options) => {
             try {
                 let chat = null;
-                // for (let i = 0; i < 30; i++) {
-                //     chat = konsol.Store.Chat.getLatestChatForWid(
-                //         konsol.widFactory.createWid(pesandari)
-                //     );
-                //     if (chat) {
-                //         break;
-                //     }
-                //     await new Promise(r =>
-                //         setTimeout(r, 1000)
-                //     );
-                // }
 
                 const chatWid = konsol.widFactory.createWid(pesandari);
                 chat =
@@ -442,7 +415,6 @@ class Client extends EventEmitter {
                 }
 
                 const { getMaybeMeLidUser, getMaybeMePnUser } = konsol.user;
-
                 const lidUser = getMaybeMeLidUser();
                 const meUser = getMaybeMePnUser();
                 let from = chat.id.isLid() ? lidUser : meUser;
