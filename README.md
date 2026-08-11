@@ -38,6 +38,8 @@ Wabot Project dapat dipasang langsung dari repository GitHub menggunakan NPM.
 
 ```bash
 npm install https://github.com/shinobi-777/wabot-Project.git
+atau
+npm install https://github.com/shinobi-777/wabot-Project/archive/refs/heads/main.tar.gz
 ```
 
 Setelah proses instalasi selesai, package akan tersedia di:
