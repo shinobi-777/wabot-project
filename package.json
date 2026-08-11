@@ -5,7 +5,8 @@
   "type": "commonjs",
   "description": "WhatsApp Web Node.js package.",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "postinstall": "node scripts/postinstall.js"
   },
   "keywords": [
     "whatsapp",
