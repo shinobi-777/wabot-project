@@ -71,7 +71,9 @@ Contoh sederhana:
 
 ```js
 const { Client } = require("wabot-project");
-const nomorWA = '628xxxxxxxxx'
+const nomorWA = '628xxxxxxxxx';
+let pairingCodeRequested = false;
+
 const client = new Client({
     puppeteer: {
         headless: 'new',
