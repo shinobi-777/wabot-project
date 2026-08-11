@@ -42,10 +42,11 @@ atau
 npm install https://github.com/shinobi-777/wabot-project/archive/refs/heads/main.tar.gz
 ```
 
-Setelah proses instalasi selesai, package akan tersedia di:
+Setelah proses instalasi selesai, library akan tersedia di folder project kamu:
 
 ```text
 node_modules/wabot-project/
+app.js
 ```
 
 Dependency yang tercantum pada `package.json` akan dipasang oleh NPM secara otomatis.
@@ -57,23 +58,33 @@ Dependency yang tercantum pada `package.json` akan dipasang oleh NPM secara otom
 Package entry point berada pada:
 
 ```text
-index.js
-Pairing hanya menggunakan pairingCode bukan barcode!!
+app.js
+- Pastikan app.js sudah diedit sesuai nomor WA yang akan dijadikan Bot.
+- Saat app.js dijalankan pertama kali akan meminta autentikasi dengan mengirimkan kode tautan.
+- Pairing hanya menggunakan Kode Tautan bukan Scan Barcode!!
+- Tautkan Perangkat pada Whatsapp telepon dengan memilih Tautkan By Nomor Telepon.
+- Lalu masukan kode yang muncul pada terminal.
 ```
 
-Setelah berhasil di Install lalu buat file js baru pada project kamu:
+Setelah berhasil di Install lalu buat edit file app.js yang sudah tersedia:
 
 ```js
-dengan import 
+const nomorWAbot = '628xxxxxxxxx'; //ganti dengan nomor bot whatsapp milikmu
+const nomorWAtujuan = '628xxxxxxxxx'; //ganti dengan nomor tujuan untuk mengirim pesan bahwa bot sudah Ready
+```
+
+Setelah app.js berhasil diedit lalu jalankan program lewat terminal dengan perintah:
+
+```bash
+node --no-deprecation app.js
+```
+
+Contoh sederhana isi file app.js:
+
+```js
 const { Client, PesanMedia } = require("wabot-project");
-```
-
-Contoh sederhana:
-
-```js
-const { Client } = require("wabot-project");
-const nomorWA = '628xxxxxxxxx';
-let pairingCodeRequested = false;
+const nomorWAbot = '628xxxxxxxxx';
+const nomorWAtujuan = '628xxxxxxxxx';
 
 const client = new Client({
     puppeteer: {
@@ -82,14 +93,9 @@ const client = new Client({
 });
 
 client.on('lakukan_pairing', async () => {
-    const pairingCodeEnabled = true;
-    if (pairingCodeEnabled && !pairingCodeRequested) {
-        const pairingCode = await client.pairingDenganNomor(nomorWA); // enter the target phone number
-        console.log(`Nomor : ${nomorWA}\nSilahkan Lakukan Pairing, code: ${pairingCode}`);
-        pairingCodeRequested = true;
-    }
+    const pairingCode = await client.pairingDenganNomor(nomorWA); // enter the target phone number
+    console.log(`Nomor : ${nomorWA}\nSilahkan Lakukan Pairing, code: ${pairingCode}`);
 });
-
 
 client.on('loading_screen', (percent, message) => {
     console.log('[LOADING]', percent, "%");
@@ -104,12 +110,19 @@ client.on('siap', async () => {
     LID : +${info.wid.user}
     DEVICE : ${(info.platform).toUpperCase()}`);
 
-    await client.kirimPesan('628xxxx', "Ready");
+    await client.kirimPesan(`${nomorWAtujuan}@c.us`, "Ready");
 });
 
 client.on('pesan_masuk', async (message) => {
     try {
-        console.log(message);
+        const isipesan = message.body;
+        if (isipesan === '/kirimpesan') {
+            await client.kirimPesan(nomorWAtujuan, "Haii Saya Bot Whatsapp by Ammar!!");
+        } else if (isipesan === '/kirimgambar') {
+            // const gambar = await PesanMedia.fromFilePath('gambar.jpg');
+            const gambar = await PesanMedia.fromUrl('https://upload.wikimedia.org/wikipedia/commons/3/3f/JPEG_example_flower.jpg');
+            await client.kirimPesan(nomorWAtujuan, gambar);
+        }
     } catch (e) {
         console.log('Error 101 :', e.message);
     }
