@@ -1,0 +1,16 @@
+{
+  "name": "wabot-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "commonjs",
+  "description": "WhatsApp Web Node.js package.",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "fluent-ffmpeg": "2.1.3",
+    "mime": "3.0.0",
+    "node-fetch": "2.7.0",
+    "puppeteer": "25.3.0"
+  }
+}
